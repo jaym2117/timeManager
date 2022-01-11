@@ -7,7 +7,9 @@ const {
     deleteTimeEntry, 
     createTimeEntry, 
     updateTimeEntry,
-    updateTimeEntryToSubmitted
+    updateTimeEntryToSubmitted, 
+    updateTimeEntryToOpen, 
+    updateTimeEntryToProcessed
 } = require('../controllers/timeEntryController.js')
 const {protect, admin} = require('../middleware/authMiddleware.js')
 
@@ -29,6 +31,14 @@ router
 router
     .route('/:id/submit')
     .put(updateTimeEntryToSubmitted, protect)
+
+router
+    .route('/:id/open')
+    .put(updateTimeEntryToOpen, protect)
+
+router
+    .route('/:id/process')
+    .put(updateTimeEntryToProcessed, protect, admin)
 
 
 module.exports = router

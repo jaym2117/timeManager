@@ -13,6 +13,7 @@ import UserEditScreen from './screens/UserEditScreen'
 import TaskListScreen from './screens/TaskListScreen'
 import TaskCreateScreen from './screens/TaskCreateScreen'
 import TaskEditScreen from './screens/TaskEditScreen'
+import ProcessTimeScreen from './screens/ProcessTimeScreen'
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path='/admin/taskList' element={<TaskListScreen />} />
             <Route path='/admin/taskCreate' element={<TaskCreateScreen />} />
             <Route path='/admin/tasks/:id/edit' element={<TaskEditScreen />} /> 
+            <Route path="/admin/processTime" element={<ProcessTimeScreen />} />
             <Route path='/' element={<HomeScreen />} exact/>
           </Routes>
         </Container>

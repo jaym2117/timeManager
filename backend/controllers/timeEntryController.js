@@ -132,6 +132,38 @@ const updateTimeEntryToSubmitted = asyncHandler( async (req, res) => {
     }
 })
 
+// @desc    Update a time entry's status back to open
+// @route   PUT /api/timeEntries/:id/open
+// @access  Private
+const updateTimeEntryToOpen = asyncHandler(async (req, res) => {
+    const timeEntry = await TimeEntry.findById(req.params.id)
+
+    if (timeEntry) {
+        timeEntry.entryStatus = 'pending'
+        const openEntry = await timeEntry.save() 
+        res.json(openEntry)
+    } else {
+        res.status(404)
+        throw new Error('Time Entry not found')
+    }
+})
+
+// @desc    Update a time entry's status back to processed
+// @route   PUT /api/timeEntries/:id/process
+// @access  Private/Admin
+const updateTimeEntryToProcessed = asyncHandler(async (req, res) => {
+    const timeEntry = await TimeEntry.findById(req.params.id)
+
+    if (timeEntry) {
+        timeEntry.entryStatus = 'processed'
+        const processedEntry = await timeEntry.save() 
+        res.json(processedEntry)
+    } else {
+        res.status(404)
+        throw new Error('Time Entry not found')
+    }
+})
+
 
 
 module.exports = {
@@ -141,5 +173,7 @@ module.exports = {
     deleteTimeEntry, 
     createTimeEntry, 
     updateTimeEntry, 
-    updateTimeEntryToSubmitted
+    updateTimeEntryToSubmitted, 
+    updateTimeEntryToOpen, 
+    updateTimeEntryToProcessed
 }

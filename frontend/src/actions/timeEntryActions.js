@@ -1,6 +1,6 @@
 import axios from 'axios'
 import moment from 'moment'
-import { TIME_ENTRY_CREATE_FAIL, TIME_ENTRY_CREATE_REQUEST, TIME_ENTRY_CREATE_SUCCESS, TIME_ENTRY_DAILY_LIST_FAIL, TIME_ENTRY_DAILY_LIST_REQUEST, TIME_ENTRY_DAILY_LIST_SUCCESS, TIME_ENTRY_DELETE_REQUEST, TIME_ENTRY_DELETE_SUCCESS, TIME_ENTRY_DELETE_FAIL, TIME_ENTRY_SUBMIT_REQUEST} from '../constants/timeEntryConstants'
+import { TIME_ENTRY_CREATE_FAIL, TIME_ENTRY_CREATE_REQUEST, TIME_ENTRY_CREATE_SUCCESS, TIME_ENTRY_DAILY_LIST_FAIL, TIME_ENTRY_DAILY_LIST_REQUEST, TIME_ENTRY_DAILY_LIST_SUCCESS, TIME_ENTRY_DELETE_REQUEST, TIME_ENTRY_DELETE_SUCCESS, TIME_ENTRY_DELETE_FAIL, TIME_ENTRY_SUBMIT_REQUEST, TIME_ENTRY_SUBMIT_SUCCESS, TIME_ENTRY_SUBMIT_FAIL, TIME_ENTRY_OPEN_REQUEST, TIME_ENTRY_OPEN_SUCCESS, TIME_ENTRY_OPEN_FAIL} from '../constants/timeEntryConstants'
 import { logout } from './userActions'
 
 
@@ -133,14 +133,75 @@ export const deleteTimeEntry = (id) => async (dispatch, getState) => {
     }
 }
 
-export const submitTimeEntries = (id) => async (dispatch, getstate) => {
+export const submitTimeEntries = (id) => async (dispatch, getState) => {
     try {
         dispatch({
             type: TIME_ENTRY_SUBMIT_REQUEST
         })
 
+        const {
+            userLogin: {userInfo}
+        } = getState() 
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const updatedTimeEntry = await axios.put(`/api/timeEntries/${id}/submit`, {}, config)
+
+        dispatch({
+            type: TIME_ENTRY_SUBMIT_SUCCESS, 
+            payload: updatedTimeEntry
+        })
+
     } catch (error) {
-        
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message
+
+        if (message === 'Not authorized, token failed'){
+            dispatch(logout())
+        }
+        dispatch({
+            type: TIME_ENTRY_SUBMIT_FAIL, 
+            payload: message
+        })
+    }
+}
+
+export const openTimeEntries = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: TIME_ENTRY_OPEN_REQUEST
+        })
+
+        const {
+            userLogin: {userInfo}
+        } = getState() 
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const updatedTimeEntry = await axios.put(`/api/timeEntries/${id}/open`, {}, config)
+
+        dispatch({
+            type: TIME_ENTRY_OPEN_SUCCESS, 
+            payload: updatedTimeEntry
+        })
+
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message
+
+        if (message === 'Not authorized, token failed'){
+            dispatch(logout())
+        }
+        dispatch({
+            type: TIME_ENTRY_OPEN_FAIL, 
+            payload: message
+        })
     }
 }
 

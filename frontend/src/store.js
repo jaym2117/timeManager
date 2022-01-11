@@ -24,6 +24,8 @@ import {
       timeEntryCreateReducer, 
       timeEntryDeleteReducer, 
       timeEntryDailyTimesheetReducer,
+      timeEntrySubmitReducer, 
+      timeEntryOpenReducer
   } from './reducers/timeEntryReducers'
 
 const reducer = combineReducers({
@@ -35,6 +37,8 @@ const reducer = combineReducers({
     timeEntryCreate: timeEntryCreateReducer, 
     timeEntryDelete: timeEntryDeleteReducer, 
     timeEntryDailyTimesheet: timeEntryDailyTimesheetReducer,
+    timeEntrySubmit: timeEntrySubmitReducer,
+    timeEntryOpen: timeEntryOpenReducer,  
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
     userDetails: userDetailsReducer,
