@@ -22,7 +22,8 @@ import {
 
   import {
       timeEntryCreateReducer, 
-      timeEntryDailyTimesheetReducer, 
+      timeEntryDeleteReducer, 
+      timeEntryDailyTimesheetReducer,
   } from './reducers/timeEntryReducers'
 
 const reducer = combineReducers({
@@ -32,7 +33,8 @@ const reducer = combineReducers({
     taskUpdate: taskUpdateReducer, 
     taskDelete: taskDeleteReducer, 
     timeEntryCreate: timeEntryCreateReducer, 
-    timeEntryDailyTimesheet: timeEntryDailyTimesheetReducer, 
+    timeEntryDelete: timeEntryDeleteReducer, 
+    timeEntryDailyTimesheet: timeEntryDailyTimesheetReducer,
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
     userDetails: userDetailsReducer,

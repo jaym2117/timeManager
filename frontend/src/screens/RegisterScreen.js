@@ -37,6 +37,7 @@ const RegisterScreen = () => {
             setMessage('Passwords do not match')
         } else {
             dispatch(register(name, email, password, isAdmin))
+            navigate('/admin/userList')
         }
     }
     return (

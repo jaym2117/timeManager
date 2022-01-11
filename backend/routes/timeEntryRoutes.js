@@ -6,7 +6,8 @@ const {
     getMyDailyTimeEntries,
     deleteTimeEntry, 
     createTimeEntry, 
-    updateTimeEntry
+    updateTimeEntry,
+    updateTimeEntryToSubmitted
 } = require('../controllers/timeEntryController.js')
 const {protect, admin} = require('../middleware/authMiddleware.js')
 
@@ -24,5 +25,10 @@ router
 router
     .route('/:id/:date')
     .get(getMyDailyTimeEntries, protect)
+
+router
+    .route('/:id/submit')
+    .put(updateTimeEntryToSubmitted, protect)
+
 
 module.exports = router

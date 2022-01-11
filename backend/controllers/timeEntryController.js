@@ -116,11 +116,30 @@ const updateTimeEntry = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc    Update a time entry's status to submitted
+// @route   PUT /api/timeEntries/:id/submit
+// @access  Private
+const updateTimeEntryToSubmitted = asyncHandler( async (req, res) => {
+    const timeEntry = await TimeEntry.findById(req.params.id)
+
+    if (timeEntry) {
+        timeEntry.entryStatus = 'submitted'
+        const submittedEntry = await timeEntry.save()
+        res.json(submittedEntry)
+    } else {
+        res.status(404)
+        throw new Error('Time Entry not found')
+    }
+})
+
+
+
 module.exports = {
     getAllTimeEntries, 
     getMyDailyTimeEntries, 
     getTimeEntryById, 
     deleteTimeEntry, 
     createTimeEntry, 
-    updateTimeEntry
+    updateTimeEntry, 
+    updateTimeEntryToSubmitted
 }

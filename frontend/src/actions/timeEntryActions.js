@@ -1,6 +1,6 @@
 import axios from 'axios'
 import moment from 'moment'
-import { TIME_ENTRY_CREATE_FAIL, TIME_ENTRY_CREATE_REQUEST, TIME_ENTRY_CREATE_SUCCESS, TIME_ENTRY_DAILY_LIST_FAIL, TIME_ENTRY_DAILY_LIST_REQUEST, TIME_ENTRY_DAILY_LIST_SUCCESS } from '../constants/timeEntryConstants'
+import { TIME_ENTRY_CREATE_FAIL, TIME_ENTRY_CREATE_REQUEST, TIME_ENTRY_CREATE_SUCCESS, TIME_ENTRY_DAILY_LIST_FAIL, TIME_ENTRY_DAILY_LIST_REQUEST, TIME_ENTRY_DAILY_LIST_SUCCESS, TIME_ENTRY_DELETE_REQUEST, TIME_ENTRY_DELETE_SUCCESS, TIME_ENTRY_DELETE_FAIL, TIME_ENTRY_SUBMIT_REQUEST} from '../constants/timeEntryConstants'
 import { logout } from './userActions'
 
 
@@ -76,7 +76,6 @@ export const getMyDailyTimesheet = (date) => async (dispatch, getState) => {
 
         const config = {
             headers: {
-                'Content-Type': 'application/json', 
                 Authorization: `Bearer ${userInfo.token}`
             }
         }
@@ -99,3 +98,50 @@ export const getMyDailyTimesheet = (date) => async (dispatch, getState) => {
         })
     }
 }
+
+export const deleteTimeEntry = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: TIME_ENTRY_DELETE_REQUEST
+        })
+
+        const {
+            userLogin: {userInfo}
+        } = getState() 
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        await axios.delete(`/api/timeEntries/${id}`, config)
+
+        dispatch({
+            type: TIME_ENTRY_DELETE_SUCCESS
+        })
+    } catch (error) {
+        const message = error.response && error.response.data.message ? error.response.data.message : error.message 
+
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout())
+        }
+        dispatch({
+            type: TIME_ENTRY_DELETE_FAIL, 
+            payload: message
+        })
+    }
+}
+
+export const submitTimeEntries = (id) => async (dispatch, getstate) => {
+    try {
+        dispatch({
+            type: TIME_ENTRY_SUBMIT_REQUEST
+        })
+
+    } catch (error) {
+        
+    }
+}
+
+

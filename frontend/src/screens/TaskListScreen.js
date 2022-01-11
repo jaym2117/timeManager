@@ -45,10 +45,10 @@ const TaskListScreen = () => {
     return (
         <>
             <Row className='align-items-center d-flex justify-content-between'>
-                <Col>
+                <Col xs={10}>
                     <h1>Tasks</h1>
                 </Col>
-                <Col className='text-right float-left'>
+                <Col className='text-right'>
                     <Link to='/admin/taskCreate' className='btn btn-light my-3'>
                         Create New Task
                     </Link>
@@ -61,7 +61,6 @@ const TaskListScreen = () => {
                     <Table striped bordered hover responsive className='table-sm'>
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Task</th>
                                 <th>Account Number</th>
                                 <th></th>
@@ -70,18 +69,17 @@ const TaskListScreen = () => {
                         <tbody>
                             {tasks.map((task) => (
                                 <tr key={task._id}>
-                                    <td>{task._id}</td>
                                     <td>{task.taskName}</td>
                                     <td>{task.accountNumber}</td>
-                                    <td>
+                                    <td className='text-center'>
                                         <LinkContainer to={`/admin/tasks/${task._id}/edit`}>
-                                            <Button variant='light' className='btn-sm'>
+                                            <Button variant='light' className='btn-sm m-1'>
                                                 <i className='fas fa-edit'></i>        
                                             </Button>
                                         </LinkContainer>
                                         <Button
                                             variant='danger'
-                                            className='btn-sm'
+                                            className='btn-sm m-1'
                                             onClick={() => deleteHandler(task._id)}>
                                                 <i className='fas fa-trash'></i>
                                             </Button>

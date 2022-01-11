@@ -4,7 +4,7 @@ import moment from 'moment'
 import {useDispatch, useSelector} from 'react-redux'
 import {Row, Col, Table, Button} from 'react-bootstrap'
 import TimeEntryForm from '../components/TimeEntryForm'
-import { getMyDailyTimesheet } from '../actions/timeEntryActions'
+import { deleteTimeEntry, getMyDailyTimesheet} from '../actions/timeEntryActions'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
  
@@ -20,13 +20,18 @@ const HomeScreen = () => {
     const timeEntryDailyTimesheet = useSelector((state) => state.timeEntryDailyTimesheet)
     const {loading, error, timeEntries, success, totalHours} = timeEntryDailyTimesheet
 
+    const timeEntryDelete = useSelector((state) => state.timeEntryDelete)
+    const {loading: loadingDelete, error: errorDelete, success: successDelete} = timeEntryDelete
+
+
     useEffect(() => {
         if (!userInfo) {
             navigate('/login')
-        } else {
+        } 
+        else {
             dispatch(getMyDailyTimesheet(currDate))
         }
-    }, [dispatch, navigate, userInfo, currDate])
+    }, [dispatch, navigate, userInfo, currDate, successDelete])
 
     const leftDate = () => {
         setCurrDate(moment(currDate).add(-1, 'd'))
@@ -36,19 +41,29 @@ const HomeScreen = () => {
         setCurrDate(moment(currDate).add(1, 'd'))
     }
 
+    const deleteHandler = (id) => {
+        if (window.confirm('Are you sure you want to delete?')) {
+            dispatch(deleteTimeEntry(id))
+        }
+    }
+
+    const submitTimeHandler = (timeEntries) => {
+        
+    }
+
     return (
         <>
             <Row>
-                <h1>My Daily Timesheet</h1>
+                <h1 className='text-center'>My Daily Timesheet</h1>
             </Row>
-            <Row>
+            <Row className='mx-1'>
                 <Col xs={1}>
                     <Button variant='light' onClick={leftDate}>
                         <i className="fas fa-chevron-left"></i>
                     </Button>
                 </Col>
                <Col xs={10} className='text-center'>
-                    <p className='h5'>{moment(currDate).format('dddd MMMM DD, YYYY')}</p>
+                    <p className='h5'>{moment(currDate).format('ddd MMM DD, YYYY')}</p>
                </Col>
                <Col xs={1}>
                    <Button variant='light' onClick={rightDate}>
@@ -57,18 +72,26 @@ const HomeScreen = () => {
                </Col>
             </Row>
             <Row className="mt-5">
-                <Col xs={9}>
+                <Col xs={4}>
                     <p className='h5'>Employee</p>
-                    <o>{userInfo.name}</o>
+                    <p>{userInfo && userInfo.name}</p>
                 </Col>
-                <Col xs={3}>
+                <Col xs={4} className='text-center'>
+                    <p className='h5'>Timesheet Status</p>
+                    {
+                        (!timeEntries || timeEntries.length === 0) ? (<p>Open</p>) : (timeEntries && timeEntries[0].entryStatus === 'pending') ? (<p>Open</p>) :  (<p>Submitted</p>)
+                    }
+                </Col>
+                <Col xs={4}>
                     <p className='h5 text-end'>Hours Worked</p>
                     <p className='text-end'>{totalHours && totalHours.toFixed(2)}</p>
                 </Col>
             </Row>
             <hr/>
             <Row>
-                <Col xs={8}>
+                <Col xs={12} md={8}>
+                    {loadingDelete && (<Loader />)}
+                    {errorDelete && (<Message variant="danger">{errorDelete}</Message>)}
                     {loading ? (<Loader />) : error ? (
                         <Message variant='danger'>{error}</Message>
                     ) : (
@@ -91,14 +114,29 @@ const HomeScreen = () => {
                                         <td>{moment(timeEntry.endDateTime).format("HH:mm A")}</td>
                                         <td>{timeEntry.duration.toFixed(2)}</td>
                                         <td>{timeEntry.comments}</td>
-                                        <td></td>
+                                        <td className='text-center'>
+                                            {timeEntry.entryStatus === 'pending' ? (
+                                                <Button
+                                                    variant='danger'
+                                                    className='btn-sm'
+                                                    onClick={() => deleteHandler(timeEntry._id)}
+                                                >
+                                                    <i className='fas fa-trash'></i>
+                                                </Button>
+                                            ) : (
+                                                <i className='fas fa-lock'></i>
+                                            )}
+                                        </td>
                                     </tr> 
                                 ))}
                             </tbody>
                         </Table>
                     )}
+                    {timeEntries && timeEntries.length !== 0 && (
+                        <Button className='btn btn-sm' variant='primary' onClick={() => submitTimeHandler(timeEntries)}>Submit</Button>
+                    )}
                 </Col>
-                <Col xs={4}>
+                <Col xs={12} md={4}>
                     <TimeEntryForm currDate={currDate}/>
                 </Col>
             </Row>

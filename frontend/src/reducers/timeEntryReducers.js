@@ -1,4 +1,4 @@
-import { TIME_ENTRY_CREATE_FAIL, TIME_ENTRY_CREATE_REQUEST, TIME_ENTRY_CREATE_RESET, TIME_ENTRY_CREATE_SUCCESS, TIME_ENTRY_DAILY_LIST_FAIL, TIME_ENTRY_DAILY_LIST_REQUEST, TIME_ENTRY_DAILY_LIST_RESET, TIME_ENTRY_DAILY_LIST_SUCCESS } from "../constants/timeEntryConstants";
+import { TIME_ENTRY_CREATE_FAIL, TIME_ENTRY_CREATE_REQUEST, TIME_ENTRY_CREATE_RESET, TIME_ENTRY_CREATE_SUCCESS, TIME_ENTRY_DAILY_LIST_FAIL, TIME_ENTRY_DAILY_LIST_REQUEST, TIME_ENTRY_DAILY_LIST_RESET, TIME_ENTRY_DAILY_LIST_SUCCESS, TIME_ENTRY_DELETE_FAIL, TIME_ENTRY_DELETE_REQUEST, TIME_ENTRY_DELETE_SUCCESS} from "../constants/timeEntryConstants";
 
 
 export const timeEntryCreateReducer = (state = {}, action) => {
@@ -26,6 +26,19 @@ export const timeEntryDailyTimesheetReducer = (state = {timeEntries: []}, action
             return {loading: false, error: action.payload}
         case TIME_ENTRY_DAILY_LIST_RESET: 
             return {}
+        default: 
+            return state
+    }
+}
+
+export const timeEntryDeleteReducer = (state = {}, action) => {
+    switch (action.type) {
+        case TIME_ENTRY_DELETE_REQUEST: 
+            return {loading: true}
+        case TIME_ENTRY_DELETE_SUCCESS: 
+            return {loading: false, success: true}
+        case TIME_ENTRY_DELETE_FAIL: 
+            return {loading: false, error: action.payload}
         default: 
             return state
     }

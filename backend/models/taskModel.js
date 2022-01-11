@@ -10,7 +10,7 @@ const taskSchema = mongoose.Schema(
         accountNumber: {
             type: String, 
             required: true, 
-            unique: true
+            unique: false
         }
     }, {
         timestamps: true
